@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriVida | Consultório de Nutrição</title>
-    <meta name="description" content="Consultório especializado em nutrição clínica e esportiva com atendimento personalizado para mudanças de hábitos alimentares e qualidade de vida.">
+    <meta name="description"
+        content="Consultório especializado em nutrição clínica e esportiva com atendimento personalizado para mudanças de hábitos alimentares e qualidade de vida.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    
+    <link rel="icon" href="data:,">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
 </head>
+
 <body>
     <!-- Header -->
-  
+
     <header>
-<!-- <div class="fixed-icons">
+        <!-- <div class="fixed-icons">
   <button id="darkModeToggle">🌙</button>
   <img id="currentFlag" src="https://flagcdn.com/w40/br.png" alt="Idioma atual" />
   <ul id="languageMenu">
@@ -25,18 +32,18 @@
 
 
         <div class="container">
-         
+
             <nav>
-                
+
                 <a href="#" class="logo">Nutri<span>Vida</span></a>
 
 
 
-                
+
                 <div class="mobile-menu">
                     <i class="fas fa-bars"></i>
                 </div>
-                
+
                 <ul class="nav-links">
                     <li><a href="#home">Início</a></li>
                     <li><a href="#about">Sobre</a></li>
@@ -45,9 +52,28 @@
                     <li><a href="#results">Resultados</a></li>
                     <li><a href="#nutritionist">Nutricionista</a></li>
                     <li><a href="#contact">Contato</a></li>
-                    
+                    <!-- <li><button id="loginBtn" class="btn-login"><i class="fas fa-user"></i> Login</button></li> -->
+                    <li id="loginButtonContainer"><button id="loginBtn" class="btn-login"><i class="fas fa-user"></i>
+                            Login</button></li>
+
+                    <!-- Botão de Usuário Logado -->
+
+                    <div id="userMenu" class="user-menu" style="display: none;">
+
+                        <button id="userMenuToggle" class="btnname">
+                            <span id="loggedInUserName" class="user-name btnname">Usuário Logado</span>▼
+                        </button>
+                        <div id="userOptions" class="user-options" style="display: none;">
+                            <button onclick="openAdminTab('registerPatient')">Cadastrar Paciente</button>
+                            <button onclick="openAdminTab('listPatients')">Listar Pacientes</button>
+                            <button onclick="openAdminTab('registerProtocol')">Cadastrar Protocolo</button>
+                            <button id="logoutAdminBtn">Sair</button>
+                        </div>
+
                 </ul>
-            <!-- <button id="darkModeToggle" aria-label="Alternar modo escuro" style="cursor:pointer; background:none; border:none; color: var(--primary); font-size:1.2rem;">🌙</button>
+
+
+                <!-- <button id="darkModeToggle" aria-label="Alternar modo escuro" style="cursor:pointer; background:none; border:none; color: var(--primary); font-size:1.2rem;">🌙</button>
                 
             
   <div class="custom-language-dropdown">
@@ -60,54 +86,236 @@
     <li data-lang="es"><img src="https://flagcdn.com/w40/es.png" alt="Español"> Español</li>
   </ul>
 </div> -->
-<div class="nav-icons">
-  <button id="darkModeToggle">🌙</button>
-  <div class="language-dropdown">
-    <img id="currentFlag" src="https://flagcdn.com/w40/br.png" alt="Idioma atual" />
-    <ul id="languageMenu">
-      <li data-lang="pt"><img src="https://flagcdn.com/w40/br.png" alt="Português"> Português</li>
-      <li data-lang="en"><img src="https://flagcdn.com/w40/gb.png" alt="English"> English</li>
-      <li data-lang="es"><img src="https://flagcdn.com/w40/es.png" alt="Español"> Español</li>
-    </ul>
-  </div>
-</div>
+                <div class="nav-icons">
+                    <button id="darkModeToggle">🌙</button>
+                    <div class="language-dropdown">
+                        <img id="currentFlag" src="https://flagcdn.com/w40/br.png" alt="Idioma atual" />
+                        <ul id="languageMenu">
+                            <li data-lang="pt"><img src="https://flagcdn.com/w40/br.png" alt="Português"> Português</li>
+                            <li data-lang="en"><img src="https://flagcdn.com/w40/gb.png" alt="English"> English</li>
+                            <li data-lang="es"><img src="https://flagcdn.com/w40/es.png" alt="Español"> Español</li>
+                        </ul>
+                    </div>
+                </div>
 
             </nav>
-            
+
         </div>
     </header>
-    
+
+
+
+
+    <!-- Admin Dashboard (Hidden by default) -->
+    <section id="adminDashboard" class="section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Painel do Administrador</h2>
+            <!-- <button id="logoutAdminBtn" class="btn btn-secondary" style="margin-bottom: 20px;">Sair</button> -->
+
+            <div class="admin-tabs">
+                <button class="tab-button active" onclick="openAdminTab('registerPatient')">Cadastrar Paciente</button>
+                <button class="tab-button" onclick="openAdminTab('listPatients')">Listar Pacientes</button>
+                <button class="tab-button" onclick="openAdminTab('registerProtocol')">Cadastrar Protocolo</button>
+            </div>
+
+            <div id="registerPatient" class="tab-content active">
+                <h3>Cadastrar Novo Paciente</h3>
+                <form id="registerPatientForm">
+                    <h4>Dados Pessoais</h4>
+                    <div class="form-row">
+                        <div class="form-group"><label for="patientName">Nome Completo</label><input type="text"
+                                id="patientName" required></div>
+                        <div class="form-group"><label for="patientDOB">Data de Nascimento</label><input type="date"
+                                id="patientDOB" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label for="patientGender">Sexo / Gênero</label><input type="text"
+                                id="patientGender" required></div>
+                        <div class="form-group"><label for="patientCPF">CPF</label><input type="text" id="patientCPF"
+                                required></div>
+                    </div>
+                    <h4>Contato</h4>
+                    <div class="form-row">
+                        <div class="form-group"><label for="patientEmail">E-mail (Login)</label><input type="email"
+                                id="patientEmail" required></div>
+                        <div class="form-group"><label for="patientPhone">Telefone Celular (WhatsApp)</label><input
+                                type="tel" id="patientPhone" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label for="patientLandline">Telefone Fixo (Opcional)</label><input
+                                type="tel" id="patientLandline"></div>
+                        <div class="form-group"><label for="patientAddress">Endereço Completo</label><input type="text"
+                                id="patientAddress" required></div>
+                    </div>
+                    <h4>Dados para Acesso</h4>
+                    <div class="form-row">
+                        <div class="form-group"><label for="patientPassword">Senha</label><input type="password"
+                                id="patientPassword" required></div>
+                        <div class="form-group"><label for="patientConfirmPassword">Confirmar Senha</label><input
+                                type="password" id="patientConfirmPassword" required></div>
+                    </div>
+                    <h4>Informações de Saúde</h4>
+                    <div class="form-row">
+                        <div class="form-group"><label for="patientWeight">Peso Atual (kg)</label><input type="number"
+                                id="patientWeight" step="0.1"></div>
+                        <div class="form-group"><label for="patientHeight">Altura (cm)</label><input type="number"
+                                id="patientHeight" step="0.1"></div>
+                    </div>
+                    <div class="form-group"><label for="patientConditions">Condições Médicas (separar por
+                            vírgula)</label><textarea id="patientConditions" rows="2"></textarea></div>
+                    <div class="form-group"><label for="patientGoals">Objetivos com a Nutrição</label><textarea
+                            id="patientGoals" rows="2"></textarea></div>
+                    <div class="form-group"><label for="patientRestrictions">Restrição Alimentar (separar por
+                            vírgula)</label><textarea id="patientRestrictions" rows="2"></textarea></div>
+                    <div class="form-group"><label for="patientMedications">Medicamentos em Uso
+                            (Opcional)</label><textarea id="patientMedications" rows="2"></textarea></div>
+                    <h4>Termos e Assinaturas</h4>
+                    <div class="form-group">
+                        <input type="checkbox" id="patientTerms" required><label for="patientTerms">Aceito os termos de
+                            uso e privacidade</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="patientLGPD" required><label for="patientLGPD">Autorizo o tratamento
+                            de dados pessoais (LGPD)</label>
+                    </div>
+                    <h4>Opcional</h4>
+                    <div class="form-group"><label for="patientPhoto">Foto do Paciente (URL)</label><input type="text"
+                            id="patientPhoto"></div>
+                    <div class="form-group"><label for="patientObservations">Observações Adicionais</label><textarea
+                            id="patientObservations" rows="3"></textarea></div>
+                    <div class="form-group"><label for="patientEmergencyContact">Contato de Emergência</label><input
+                            type="text" id="patientEmergencyContact"></div>
+                    <button type="submit" class="btn">Cadastrar Paciente</button>
+                    <p id="registerPatientError" style="color: red; margin-top: 10px;"></p>
+                </form>
+            </div>
+
+            <div id="listPatients" class="tab-content">
+                <h3>Pacientes Cadastrados</h3>
+                <input type="text" id="searchPatientInput" placeholder="Buscar paciente por nome ou email..."
+                    style="width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 5px; border: 1px solid #ddd;">
+                <div id="patientsList">
+                    <!-- Patient cards will be loaded here -->
+                    <!-- Lista de Pacientes (Visível apenas para administrador) -->
+                    <section id="listPatientsSection" style="display: none;">
+                        <h3>Lista de Pacientes</h3>
+                        <table id="patientsTable" border="1"
+                            style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Protocolo</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientsTableBody">
+                                <!-- Pacientes aparecerão aqui -->
+                            </tbody>
+                        </table>
+                    </section>
+
+                </div>
+            </div>
+
+            <div id="registerProtocol" class="tab-content">
+                <h3>Cadastrar Protocolo de Alimentação</h3>
+                <form id="protocolForm">
+                    <div class="form-group">
+                        <label for="protocolPatientSelect">Selecionar Paciente:</label>
+                        <select id="protocolPatientSelect" required>
+                            <option value="">Carregando pacientes...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="protocolTitle">Título do Protocolo:</label>
+                        <input type="text" id="protocolTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="protocolContent">Conteúdo do Protocolo:</label>
+                        <textarea id="protocolContent" rows="10" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Salvar Protocolo</button>
+                    <p id="protocolError" style="color: red; margin-top: 10px;"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patient Dashboard (Hidden by default) -->
+    <section id="patientDashboard" class="section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Meu Painel</h2>
+            <button id="logoutPatientBtn" class="btn btn-secondary" style="margin-bottom: 20px;">Sair</button>
+
+            <div class="patient-info-card">
+                <h3>Minhas Informações Pessoais</h3>
+                <p><strong>Nome:</strong> <span id="patientDashboardName"></span></p>
+                <p><strong>E-mail:</strong> <span id="patientDashboardEmail"></span></p>
+                <p><strong>Data de Nascimento:</strong> <span id="patientDashboardDOB"></span></p>
+                <p><strong>Sexo/Gênero:</strong> <span id="patientDashboardGender"></span></p>
+                <p><strong>CPF:</strong> <span id="patientDashboardCPF"></span></p>
+                <p><strong>Telefone:</strong> <span id="patientDashboardPhone"></span></p>
+                <p><strong>Endereço:</strong> <span id="patientDashboardAddress"></span></p>
+                <p><strong>Peso:</strong> <span id="patientDashboardWeight"></span> kg</p>
+                <p><strong>Altura:</strong> <span id="patientDashboardHeight"></span> cm</p>
+                <p><strong>Condições Médicas:</strong> <span id="patientDashboardConditions"></span></p>
+                <p><strong>Objetivos:</strong> <span id="patientDashboardGoals"></span></p>
+                <p><strong>Restrições Alimentares:</strong> <span id="patientDashboardRestrictions"></span></p>
+                <p><strong>Medicamentos:</strong> <span id="patientDashboardMedications"></span></p>
+                <p><strong>Contato de Emergência:</strong> <span id="patientDashboardEmergencyContact"></span></p>
+                <p><strong>Observações:</strong> <span id="patientDashboardObservations"></span></p>
+            </div>
+
+            <div class="patient-protocol-card" style="margin-top: 30px;">
+                <h3>Meu Protocolo de Alimentação</h3>
+                <div id="patientProtocolsList">
+                    <p>Nenhum protocolo de alimentação cadastrado ainda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-  
+
         <div class="container">
             <div class="hero-content">
                 <h1>Sua jornada para uma vida mais saudável começa aqui</h1>
-                <p>Nutrição personalizada, orientação científica e acompanhamento contínuo para mudanças duradouras nos seus hábitos alimentares.</p>
+                <p>Nutrição personalizada, orientação científica e acompanhamento contínuo para mudanças duradouras nos
+                    seus hábitos alimentares.</p>
                 <a href="#contact-form" class="btn">Agende sua consulta</a>
                 <a href="#services" class="btn btn-secondary">Nossos serviços</a>
-                
+
 
             </div>
         </div>
     </section>
-   
+
+
+
+
     <!-- About Section -->
     <section class="section" id="about">
         <div class="container">
             <h2 class="section-title">Sobre o Consultório</h2>
-            
+
             <div class="about-content">
                 <div class="about-text">
                     <h2>Cuidado nutricional completo e personalizado</h2>
-                    <p>O NutriVida foi fundado com a missão de ajudar pessoas a transformarem sua relação com a comida e alcançarem seus objetivos de saúde através de uma abordagem científica, humana e personalizada.</p>
-                    <p>Nossos valores são baseados em evidências científicas atualizadas, respeito às individualidades de cada paciente e um compromisso genuíno com resultados duradouros.</p>
-                    <p>Cada plano nutricional é cuidadosamente elaborado após avaliação completa do histórico médico, hábitos alimentares, rotina e objetivos específicos.</p>
+                    <p>O NutriVida foi fundado com a missão de ajudar pessoas a transformarem sua relação com a comida e
+                        alcançarem seus objetivos de saúde através de uma abordagem científica, humana e personalizada.
+                    </p>
+                    <p>Nossos valores são baseados em evidências científicas atualizadas, respeito às individualidades
+                        de cada paciente e um compromisso genuíno com resultados duradouros.</p>
+                    <p>Cada plano nutricional é cuidadosamente elaborado após avaliação completa do histórico médico,
+                        hábitos alimentares, rotina e objetivos específicos.</p>
                 </div>
-                
+
                 <div class="about-image">
-                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f99b5723-7cca-474f-bd14-c2af34dd7c70.png" alt="Consultório moderno e acolhedor com mesa de atendimento e equipamentos de avaliação nutricional" />
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f99b5723-7cca-474f-bd14-c2af34dd7c70.png"
+                        alt="Consultório moderno e acolhedor com mesa de atendimento e equipamentos de avaliação nutricional" />
                 </div>
             </div>
         </div>
@@ -117,48 +325,52 @@
     <section class="section services" id="services">
         <div class="container">
             <h2 class="section-title">Nossos Serviços</h2>
-            
+
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-utensils"></i>
                     </div>
                     <h3>Nutrição Clínica</h3>
-                    <p>Atendimento especializado para tratamento de doenças como diabetes, hipertensão, dislipidemia e distúrbios gastrointestinais.</p>
+                    <p>Atendimento especializado para tratamento de doenças como diabetes, hipertensão, dislipidemia e
+                        distúrbios gastrointestinais.</p>
                     <p class="service-price">R$ 250 a consulta</p>
                     <a href="#contact-form" class="btn">Agendar</a>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-running"></i>
                     </div>
                     <h3>Nutrição Esportiva</h3>
-                    <p>Planejamento alimentar para atletas e praticantes de atividade física, visando performance, recuperação e composição corporal.</p>
+                    <p>Planejamento alimentar para atletas e praticantes de atividade física, visando performance,
+                        recuperação e composição corporal.</p>
                     <p class="service-price">R$ 280 a consulta</p>
                     <a href="#contact-form" class="btn">Agendar</a>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-weight"></i>
                     </div>
                     <h3>Nutrição para Emagrecimento</h3>
-                    <p>Plano personalizado para perda de peso saudável e sustentável, sem dietas restritivas ou modismos.</p>
+                    <p>Plano personalizado para perda de peso saudável e sustentável, sem dietas restritivas ou
+                        modismos.</p>
                     <p class="service-price">R$ 230 a consulta</p>
                     <a href="#contact-form" class="btn">Agendar</a>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-heart"></i>
                     </div>
                     <h3>Nutrição Preventiva</h3>
-                    <p>Orientação nutricional para manutenção da saúde e prevenção de doenças através da alimentação.</p>
+                    <p>Orientação nutricional para manutenção da saúde e prevenção de doenças através da alimentação.
+                    </p>
                     <p class="service-price">R$ 220 a consulta</p>
                     <a href="#contact-form" class="btn">Agendar</a>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-user-clock"></i>
@@ -168,7 +380,7 @@
                     <p class="service-price">R$ 180 a sessão</p>
                     <a href="#contact-form" class="btn">Agendar</a>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-clipboard-check"></i>
@@ -182,109 +394,137 @@
         </div>
     </section>
 
-<!-- Packages Section -->
-<section class="section" id="packages">
-    <div class="container">
-        <h2 class="section-title">Pacotes Promocionais</h2>
-        
-        <div class="packages-container">
-            <div class="package-card">
-                <h3>Pacote Bronze</h3>
-                <p class="package-price">R$ 600</p>
-                <ul class="package-features">
-                    <li>3 consultas presenciais</li>
-                    <li>Avaliação corporal completa</li>
-                    <li>Orientação nutricional básica</li>
-                    <li>Plano alimentar personalizado</li>
-                    <li>Suporte por e-mail</li>
-                </ul>
-                <a href="javascript:void(0);" class="btn" data-package="Pacote Bronze" onclick="sendWhatsApp(this)">Contratar</a>
-            </div>
-            
-            <div class="package-card featured">
-                <h3>Pacote Prata</h3>
-                <p class="package-price">R$ 900</p>
-                <ul class="package-features">
-                    <li>5 consultas presenciais</li>
-                    <li>2 avaliações corporais</li>
-                    <li>Orientação nutricional detalhada</li>
-                    <li>Plano alimentar personalizado</li>
-                    <li>Receitas e cardápios variados</li>
-                    <li>Suporte por e-mail e WhatsApp</li>
-                </ul>
-                <a href="javascript:void(0);" class="btn" data-package="Pacote Prata" onclick="sendWhatsApp(this)">Contratar</a>
-            </div>
-            
-            <div class="package-card">
-                <h3>Pacote Ouro</h3>
-                <p class="package-price">R$ 1,400</p>
-                <ul class="package-features">
-                    <li>8 consultas presenciais</li>
-                    <li>4 avaliações corporais</li>
-                    <li>Orientação nutricional avançada</li>
-                    <li>Plano alimentar personalizado</li>
-                    <li>Cardápios semanais e receitas exclusivas</li>
-                    <li>Suporte ilimitado por WhatsApp</li>
-                    <li>Lista de compras inteligente</li>
-                    <li>E-book exclusivo de nutrição</li>
-                </ul>
-                <a href="javascript:void(0);" class="btn" data-package="Pacote Ouro" onclick="sendWhatsApp(this)">Contratar</a>
+    <!-- Packages Section -->
+    <section class="section" id="packages">
+        <div class="container">
+            <h2 class="section-title">Pacotes Promocionais</h2>
+
+            <div class="packages-container">
+                <div class="package-card">
+                    <h3>Pacote Bronze</h3>
+                    <p class="package-price">R$ 600</p>
+                    <ul class="package-features">
+                        <li>3 consultas presenciais</li>
+                        <li>Avaliação corporal completa</li>
+                        <li>Orientação nutricional básica</li>
+                        <li>Plano alimentar personalizado</li>
+                        <li>Suporte por e-mail</li>
+                    </ul>
+                    <a href="javascript:void(0);" class="btn" data-package="Pacote Bronze"
+                        onclick="sendWhatsApp(this)">Contratar</a>
+                </div>
+
+                <div class="package-card featured">
+                    <h3>Pacote Prata</h3>
+                    <p class="package-price">R$ 900</p>
+                    <ul class="package-features">
+                        <li>5 consultas presenciais</li>
+                        <li>2 avaliações corporais</li>
+                        <li>Orientação nutricional detalhada</li>
+                        <li>Plano alimentar personalizado</li>
+                        <li>Receitas e cardápios variados</li>
+                        <li>Suporte por e-mail e WhatsApp</li>
+                    </ul>
+                    <a href="javascript:void(0);" class="btn" data-package="Pacote Prata"
+                        onclick="sendWhatsApp(this)">Contratar</a>
+                </div>
+
+                <div class="package-card">
+                    <h3>Pacote Ouro</h3>
+                    <p class="package-price">R$ 1,400</p>
+                    <ul class="package-features">
+                        <li>8 consultas presenciais</li>
+                        <li>4 avaliações corporais</li>
+                        <li>Orientação nutricional avançada</li>
+                        <li>Plano alimentar personalizado</li>
+                        <li>Cardápios semanais e receitas exclusivas</li>
+                        <li>Suporte ilimitado por WhatsApp</li>
+                        <li>Lista de compras inteligente</li>
+                        <li>E-book exclusivo de nutrição</li>
+                    </ul>
+                    <a href="javascript:void(0);" class="btn" data-package="Pacote Ouro"
+                        onclick="sendWhatsApp(this)">Contratar</a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
     <!-- Results Section -->
-<section class="section results-section" id="results">
-  <div class="container">
-    <h2 class="section-title">Resultados dos Nossos Pacientes</h2>
-    <p class="results-subtitle">Algumas histórias de transformação através da reeducação alimentar</p>
+    <section class="section results-section" id="results">
+        <div class="container">
+            <h2 class="section-title">Resultados dos Nossos Pacientes</h2>
+            <p class="results-subtitle">Algumas histórias de transformação através da reeducação alimentar</p>
 
-    <div class="carousel-wrapper" style="position: relative; overflow: hidden;">
-      <button class="carousel-arrow prev" onclick="moveCarousel(-1)">&#10094;</button>
+            <div class="carousel-wrapper" style="position: relative; overflow: hidden;">
+                <button class="carousel-arrow prev" onclick="moveCarousel(-1)">&#10094;</button>
 
-      <div class="results-carousel" id="carousel" style="display: flex; transition: transform 0.5s ease;">
-        <!-- CARDS -->
-        <div class="result-card" onclick="openModal(this)">
-          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/44df9f02-95de-40f2-a52b-ba7a8884f885.png" alt="Homem antes e depois" />
-          <div class="result-info"><h4>Carlos, 34 anos</h4><p>Perda de 18kg em 6 meses</p></div>
+                <div class="results-carousel" id="carousel" style="display: flex; transition: transform 0.5s ease;">
+                    <!-- CARDS -->
+                    <div class="result-card" onclick="openModal(this)">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/44df9f02-95de-40f2-a52b-ba7a8884f885.png"
+                            alt="Homem antes e depois" />
+                        <div class="result-info">
+                            <h4>Carlos, 34 anos</h4>
+                            <p>Perda de 18kg em 6 meses</p>
+                        </div>
+                    </div>
+
+                    <div class="result-card" onclick="openModal(this)">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d8f47ae6-3243-45ad-9824-614d4eb332b7.png"
+                            alt="Mulher resultado" />
+                        <div class="result-info">
+                            <h4>Ana, 42 anos</h4>
+                            <p>Controle da diabetes tipo 2</p>
+                        </div>
+                    </div>
+
+                    <div class="result-card" onclick="openModal(this)">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/95445c0a-4af6-418c-b466-7bc6da3317c8.png"
+                            alt="Atleta evolução" />
+                        <div class="result-info">
+                            <h4>Pedro, 29 anos</h4>
+                            <p>Aumento de 8% na massa muscular</p>
+                        </div>
+                    </div>
+
+                    <div class="result-card" onclick="openModal(this)">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/62aae175-7b93-4556-8bba-b2290aa2172a.png"
+                            alt="Paciente idosa" />
+                        <div class="result-info">
+                            <h4>Maria, 67 anos</h4>
+                            <p>Redução de 35% nos marcadores inflamatórios</p>
+                        </div>
+                    </div>
+
+                    <div class="result-card" onclick="openModal(this)">
+                        <img src="https://placehold.co/400x300?text=Novo+Resultado+1" alt="Paciente abdômen" />
+                        <div class="result-info">
+                            <h4>Roberto, 45 anos</h4>
+                            <p>Redução de 12cm na cintura</p>
+                        </div>
+                    </div>
+
+                    <div class="result-card" onclick="openModal(this)">
+                        <img src="https://placehold.co/400x300?text=Novo+Resultado+2" alt="Adolescente acne" />
+                        <div class="result-info">
+                            <h4>Juliana, 16 anos</h4>
+                            <p>Melhora de 70% na acne</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-arrow next" onclick="moveCarousel(1)">&#10095;</button>
+            </div>
         </div>
-
-        <div class="result-card" onclick="openModal(this)">
-          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d8f47ae6-3243-45ad-9824-614d4eb332b7.png" alt="Mulher resultado" />
-          <div class="result-info"><h4>Ana, 42 anos</h4><p>Controle da diabetes tipo 2</p></div>
-        </div>
-
-        <div class="result-card" onclick="openModal(this)">
-          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/95445c0a-4af6-418c-b466-7bc6da3317c8.png" alt="Atleta evolução" />
-          <div class="result-info"><h4>Pedro, 29 anos</h4><p>Aumento de 8% na massa muscular</p></div>
-        </div>
-
-        <div class="result-card" onclick="openModal(this)">
-          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/62aae175-7b93-4556-8bba-b2290aa2172a.png" alt="Paciente idosa" />
-          <div class="result-info"><h4>Maria, 67 anos</h4><p>Redução de 35% nos marcadores inflamatórios</p></div>
-        </div>
-
-        <div class="result-card" onclick="openModal(this)">
-          <img src="https://placehold.co/400x300?text=Novo+Resultado+1" alt="Paciente abdômen" />
-          <div class="result-info"><h4>Roberto, 45 anos</h4><p>Redução de 12cm na cintura</p></div>
-        </div>
-
-        <div class="result-card" onclick="openModal(this)">
-          <img src="https://placehold.co/400x300?text=Novo+Resultado+2" alt="Adolescente acne" />
-          <div class="result-info"><h4>Juliana, 16 anos</h4><p>Melhora de 70% na acne</p></div>
-        </div>
-      </div>
-
-      <button class="carousel-arrow next" onclick="moveCarousel(1)">&#10095;</button>
+    </section>
+    <div id="image-modal"
+        style="display:none; position:fixed; z-index:999; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+        <img id="modal-img" src="" alt=""
+            style="max-width:90%; max-height:90%; border: 5px solid white; border-radius: 8px;">
+        <span onclick="closeModal()"
+            style="position:absolute; top:20px; right:30px; font-size: 40px; color:white; cursor:pointer;">&times;</span>
     </div>
-  </div>
-</section>
-<div id="image-modal" style="display:none; position:fixed; z-index:999; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
-  <img id="modal-img" src="" alt="" style="max-width:90%; max-height:90%; border: 5px solid white; border-radius: 8px;">
-  <span onclick="closeModal()" style="position:absolute; top:20px; right:30px; font-size: 40px; color:white; cursor:pointer;">&times;</span>
-</div>
 
 
     <!-- Nutritionist Section -->
@@ -292,22 +532,26 @@
         <div class="container">
             <div class="nutritionist">
                 <div class="nutritionist-image">
-                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e64ba23a-63be-44b1-a2e6-380cf44f0f0f.png" alt="Nutricionista Dra. Juliana Martins, profissional sorridente em jaleco branco com crachá" />
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e64ba23a-63be-44b1-a2e6-380cf44f0f0f.png"
+                        alt="Nutricionista Dra. Juliana Martins, profissional sorridente em jaleco branco com crachá" />
                 </div>
-                
+
                 <div class="nutritionist-info">
                     <h2>Dra. Juliana Martins</h2>
-                    <p>Nutricionista formada pela Universidade Federal de São Paulo (UNIFESP) com especialização em Nutrição Clínica e Esportiva.</p>
-                    <p>Mestrado em Ciências da Nutrição pela USP e membro ativo da Associação Brasileira de Nutrição (ASBRAN).</p>
-                    <p>Com mais de 10 anos de experiência clínica, já atendeu mais de 1.000 pacientes, ajudando-os a alcançarem seus objetivos de saúde através da alimentação.</p>
-                    
+                    <p>Nutricionista formada pela Universidade Federal de São Paulo (UNIFESP) com especialização em
+                        Nutrição Clínica e Esportiva.</p>
+                    <p>Mestrado em Ciências da Nutrição pela USP e membro ativo da Associação Brasileira de Nutrição
+                        (ASBRAN).</p>
+                    <p>Com mais de 10 anos de experiência clínica, já atendeu mais de 1.000 pacientes, ajudando-os a
+                        alcançarem seus objetivos de saúde através da alimentação.</p>
+
                     <div class="nutritionist-specialties">
                         <span class="specialty-badge">Nutrição Clínica</span>
                         <span class="specialty-badge">Nutrição Esportiva</span>
                         <span class="specialty-badge">Nutrição Funcional</span>
                         <span class="specialty-badge">Nutrição Comportamental</span>
                     </div>
-                    
+
                     <div class="social-links">
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-facebook"></i></a>
@@ -323,11 +567,11 @@
     <section class="section contact-section" id="contact">
         <div class="container">
             <h2 class="section-title">Entre em Contato</h2>
-            
+
             <div class="contact-container">
                 <div class="contact-info">
                     <h2>Nossa Localização</h2>
-                    
+
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-map-marker-alt"></i>
@@ -337,7 +581,7 @@
                             <p>Av. Paulista, 1000 - Conj. 1210<br>São Paulo - SP, 01310-100</p>
                         </div>
                     </div>
-                    
+
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-phone-alt"></i>
@@ -347,7 +591,7 @@
                             <p>(11) 1234-5678</p>
                         </div>
                     </div>
-                    
+
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-envelope"></i>
@@ -357,7 +601,7 @@
                             <p>contato@nutrivida.com.br</p>
                         </div>
                     </div>
-                    
+
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-calendar-alt"></i>
@@ -368,12 +612,14 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.0754267452926!2d-46.65342668447589!3d-23.56573436763867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%2C%201000%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001310-100!5e0!3m2!1spt-BR!2sbr!4v1643132760749!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.0754267452926!2d-46.65342668447589!3d-23.56573436763867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%2C%201000%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001310-100!5e0!3m2!1spt-BR!2sbr!4v1643132760749!5m2!1spt-BR!2sbr"
+                        allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
-            
+
             <div class="contact-form" id="contact-form">
                 <h2>Agende sua consulta</h2>
                 <form id="appointmentForm">
@@ -382,44 +628,44 @@
                             <label for="name">Nome Completo</label>
                             <input type="text" id="name" name="name" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="email">E-mail</label>
                             <input type="email" id="email" name="email" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="phone">Telefone</label>
                             <input type="tel" id="phone" name="phone" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="service">Serviço de Interesse</label>
                             <select id="service" name="service" required>
                                 <option value="">Selecione um serviço</option>
-                                 
+
                                 <option value="nutricao_clinica">Nutrição Clínica</option>
                                 <option value="nutricao_esportiva">Nutrição Esportiva</option>
                                 <option value="emagrecimento">Nutrição para Emagrecimento</option>
                                 <option value="nutricao_preventiva">Nutrição Preventiva</option>
-                               <option value="acompanhamento_nutricional">Acompanhamento Nutricional</option>
-                               <option value="avaliacao_corporal">Avaliação Corporal</option>
+                                <option value="acompanhamento_nutricional">Acompanhamento Nutricional</option>
+                                <option value="avaliacao_corporal">Avaliação Corporal</option>
                                 <option value="pacote_bronze">Pacote Bronze</option>
                                 <option value="pacote_prata">Pacote Prata</option>
                                 <option value="pacote_ouro">Pacote Ouro</option>
-                               
-                                
+
+
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="message">Mensagem/Observações</label>
                         <textarea id="message" name="message" rows="5"></textarea>
                     </div>
-                    
+
                     <button type="submit" class="btn">
                         <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
                     </button>
@@ -428,15 +674,155 @@
         </div>
     </section>
 
+
+
+
+
+
+
+
+
+
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeLoginModal()">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+                <p id="loginError" style="color: red; margin-top: 10px;"></p>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+
+<!-- Modal de Edição do Paciente -->
+<div id="editPatientModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5);">
+  <div style="background:#fff; padding:20px; margin:50px auto; max-width:600px; position:relative; border-radius:8px;">
+    <button onclick="document.getElementById('editPatientModal').style.display='none'" style="position:absolute; top:10px; right:10px;">X</button>
+    <h2>Editar Paciente</h2>
+    <form id="editPatientForm">
+      <input type="hidden" id="editPatientUid" />
+      <label>Nome:
+        <input type="text" id="editPatientName" required />
+      </label><br/><br/>
+      <label>Data de Nascimento:
+        <input type="date" id="editPatientDOB" />
+      </label><br/><br/>
+      <label>Sexo:
+        <select id="editPatientGender">
+          <option value="">Selecione</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Feminino">Feminino</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </label><br/><br/>
+      <label>CPF:
+        <input type="text" id="editPatientCPF" />
+      </label><br/><br/>
+      <label>Email:
+        <input type="email" id="editPatientEmail" />
+      </label><br/><br/>
+      <label>Telefone:
+        <input type="text" id="editPatientPhone" />
+      </label><br/><br/>
+      <label>Telefone Fixo:
+        <input type="text" id="editPatientLandline" />
+      </label><br/><br/>
+      <label>Endereço:
+        <input type="text" id="editPatientAddress" />
+      </label><br/><br/>
+      <label>Peso (kg):
+        <input type="number" step="0.1" id="editPatientWeight" />
+      </label><br/><br/>
+      <label>Altura (m):
+        <input type="number" step="0.01" id="editPatientHeight" />
+      </label><br/><br/>
+      <label>Condições (separadas por vírgula):
+        <input type="text" id="editPatientConditions" />
+      </label><br/><br/>
+      <label>Objetivos:
+        <input type="text" id="editPatientGoals" />
+      </label><br/><br/>
+      <label>Restrições (separadas por vírgula):
+        <input type="text" id="editPatientRestrictions" />
+      </label><br/><br/>
+      <label>Medicações:
+        <input type="text" id="editPatientMedications" />
+      </label><br/><br/>
+      <label>Observações:
+        <textarea id="editPatientObservations"></textarea>
+      </label><br/><br/>
+      <label>Contato de Emergência:
+        <input type="text" id="editPatientEmergencyContact" />
+      </label><br/><br/>
+
+      <!-- Container para protocolos -->
+      <div id="patientProtocolsContainer" style="border:1px solid #ccc; padding:10px; max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
+        <!-- Protocolos aparecerão aqui -->
+      </div>
+
+      <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <!-- Formulário de edição de protocolo -->
+    <div id="editProtocolSection" style="display:none; border:1px solid #999; padding:10px; margin-top:15px;">
+      <h3>Editar Protocolo</h3>
+      <form id="editProtocolForm">
+        <input type="hidden" id="editProtocolId" />
+        <label>Título:
+          <input type="text" id="editProtocolTitle" required />
+        </label><br/><br/>
+        <label>Conteúdo:
+          <textarea id="editProtocolContent" rows="6" required></textarea>
+        </label><br/><br/>
+        <button type="submit">Salvar Protocolo</button>
+        <button type="button" id="cancelEditProtocol">Cancelar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-container">
                 <div class="footer-about">
                     <a href="#" class="footer-logo">Nutri<span>Vida</span></a>
-                    <p>Consultório de Nutrição especializado em saúde, qualidade de vida e desempenho esportivo através de uma abordagem científica e humanizada.</p>
+                    <p>Consultório de Nutrição especializado em saúde, qualidade de vida e desempenho esportivo através
+                        de uma abordagem científica e humanizada.</p>
                 </div>
-                
+
                 <div class="footer-links">
                     <h3>Links Rápidos</h3>
                     <ul>
@@ -449,7 +835,7 @@
                         <li><a href="#contact">Contato</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-contact">
                     <h3>Contato</h3>
                     <p><i class="fas fa-map-marker-alt"></i> Av. Paulista, 1000 - São Paulo/SP</p>
@@ -458,13 +844,22 @@
                     <p><i class="fas fa-clock"></i> Seg-Sex: 8h às 19h<br>Sáb: 8h às 13h</p>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2023 NutriVida - Todos os direitos reservados</p>
             </div>
         </div>
     </footer>
-  
+
+
+
+
+
+
+
+
     <script src="script.js"></script>
+
 </body>
+
 </html>
