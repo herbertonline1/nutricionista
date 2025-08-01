@@ -1,57 +1,57 @@
- // Animate elements when scrolled into view
-        const animateOnScroll = () => {
-            const elements = document.querySelectorAll('.service-card, .package-card, .result-card');
-            
-            elements.forEach((el, i) => {
-                const elementTop = el.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                
-                if (elementTop < windowHeight - 100) {
-                    el.style.animation = `fadeInUp 0.6s ease ${i * 0.1}s forwards`;
-                    el.style.opacity = 0;
-                }
-            });
-        };
-        
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', animateOnScroll);
-        
-        // Mobile Menu Toggle
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const navLinks = document.querySelector('.nav-links');
-        
-        mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-        
-        // Smooth Scrolling for Anchor Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                if (navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                }
-                
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-        
-        // WhatsApp Form Submission
-        const form = document.getElementById('appointmentForm');
-        
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const service = document.getElementById('service').options[document.getElementById('service').selectedIndex].text;
-            const message = document.getElementById('message').value;
-            
-            const whatsappMessage = `*Novo Agendamento - NutriVida*
+// Animate elements when scrolled into view
+const animateOnScroll = () => {
+  const elements = document.querySelectorAll('.service-card, .package-card, .result-card');
+
+  elements.forEach((el, i) => {
+    const elementTop = el.getBoundingClientRect().top;
+    const windowHeight = window.innerHeight;
+
+    if (elementTop < windowHeight - 100) {
+      el.style.animation = `fadeInUp 0.6s ease ${i * 0.1}s forwards`;
+      el.style.opacity = 0;
+    }
+  });
+};
+
+window.addEventListener('scroll', animateOnScroll);
+window.addEventListener('load', animateOnScroll);
+
+// Mobile Menu Toggle
+const mobileMenu = document.querySelector('.mobile-menu');
+const navLinks = document.querySelector('.nav-links');
+
+mobileMenu.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+});
+
+// Smooth Scrolling for Anchor Links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    if (navLinks.classList.contains('active')) {
+      navLinks.classList.remove('active');
+    }
+
+    document.querySelector(this.getAttribute('href')).scrollIntoView({
+      behavior: 'smooth'
+    });
+  });
+});
+
+// WhatsApp Form Submission
+const form = document.getElementById('appointmentForm');
+
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const service = document.getElementById('service').options[document.getElementById('service').selectedIndex].text;
+  const message = document.getElementById('message').value;
+
+  const whatsappMessage = `*Novo Agendamento - NutriVida*
             
 *Nome:* ${name}
 *E-mail:* ${email}
@@ -59,49 +59,49 @@
 *Serviço de Interesse:* ${service}
 *Mensagem:* ${message || 'Nenhuma mensagem adicional'}`;
 
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-            window.open(`https://api.whatsapp.com/send?phone=5581992757332&text=${encodedMessage}`, '_blank');
-            
-            form.reset();
-        });
-        
-        // Sticky Header on Scroll
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            header.classList.toggle('sticky', window.scrollY > 0);
-        });
+  const encodedMessage = encodeURIComponent(whatsappMessage);
+  window.open(`https://api.whatsapp.com/send?phone=5581992757332&text=${encodedMessage}`, '_blank');
+
+  form.reset();
+});
+
+// Sticky Header on Scroll
+window.addEventListener('scroll', function () {
+  const header = document.querySelector('header');
+  header.classList.toggle('sticky', window.scrollY > 0);
+});
 
 
 
 
-    function sendWhatsApp(element) {
-        const packageName = element.getAttribute('data-package');
-        const message = `Tenho interesse nesse pacote promocional: ${packageName}`;
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappNumber = '5581992757332'; // Substitua pelo número da nutricionista
-        const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
-        
-        window.open(whatsappLink, '_blank');
-    }
+function sendWhatsApp(element) {
+  const packageName = element.getAttribute('data-package');
+  const message = `Tenho interesse nesse pacote promocional: ${packageName}`;
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappNumber = '5581992757332'; // Substitua pelo número da nutricionista
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+
+  window.open(whatsappLink, '_blank');
+}
 
 
 
 
 
-        // Função para abrir o modal
+// Função para abrir o modal
 function openModal(card) {
-    const modal = document.getElementById("imageModal");
-    const modalImage = document.getElementById("modalImage");
-    const img = card.querySelector("img");
-    
-    modal.style.display = "flex"; // Exibe o modal
-    modalImage.src = img.src; // Define a imagem do modal
+  const modal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+  const img = card.querySelector("img");
+
+  modal.style.display = "flex"; // Exibe o modal
+  modalImage.src = img.src; // Define a imagem do modal
 }
 
 // Função para fechar o modal
 function closeModal() {
-    const modal = document.getElementById("imageModal");
-    modal.style.display = "none"; // Oculta o modal
+  const modal = document.getElementById("imageModal");
+  modal.style.display = "none"; // Oculta o modal
 }
 
 
@@ -110,69 +110,69 @@ function closeModal() {
 
 let currentIndex = 0;
 
-  function moveCarousel(direction) {
-    const carousel = document.getElementById('carousel');
-    const cards = document.querySelectorAll('.result-card');
-    const total = cards.length;
-    const visible = window.innerWidth >= 768 ? 3 : 1;
-    const maxIndex = Math.ceil(total / visible) - 1;
+function moveCarousel(direction) {
+  const carousel = document.getElementById('carousel');
+  const cards = document.querySelectorAll('.result-card');
+  const total = cards.length;
+  const visible = window.innerWidth >= 768 ? 3 : 1;
+  const maxIndex = Math.ceil(total / visible) - 1;
 
-    currentIndex += direction;
+  currentIndex += direction;
 
-    // loop infinito
-    if (currentIndex > maxIndex) currentIndex = 0;
-    if (currentIndex < 0) currentIndex = maxIndex;
+  // loop infinito
+  if (currentIndex > maxIndex) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = maxIndex;
 
-    const percentage = -(100 * currentIndex);
-    carousel.style.transform = `translateX(${percentage}%)`;
-  }
+  const percentage = -(100 * currentIndex);
+  carousel.style.transform = `translateX(${percentage}%)`;
+}
 
-  function openModal(card) {
-    const imgSrc = card.querySelector('img').src;
-    const modal = document.getElementById("image-modal");
-    const modalImg = document.getElementById("modal-img");
-    modal.style.display = "flex";
-    modalImg.src = imgSrc;
-  }
+// function openModal(card) {
+//   const imgSrc = card.querySelector('img').src;
+//   const modal = document.getElementById("image-modal");
+//   const modalImg = document.getElementById("modal-img");
+//   modal.style.display = "flex";
+//   modalImg.src = imgSrc;
+// }
 
-  function closeModal() {
-    document.getElementById("image-modal").style.display = "none";
-  }
+// function closeModal() {
+//   document.getElementById("image-modal").style.display = "none";
+// }
 
 
 
 
 
 // DARKMODE 
- 
 
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
 
-    // Função para atualizar o ícone do botão
-    function updateIcon() {
-        if(body.classList.contains('dark-mode')) {
-            darkModeToggle.textContent = '☀️'; // Sol para dark mode ativo
-        } else {
-            darkModeToggle.textContent = '🌙'; // Lua para modo claro
-        }
-    }
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
 
-    // Verifica se o usuário já tem preferência salva
-    if(localStorage.getItem('darkMode') === 'enabled') {
-        body.classList.add('dark-mode');
-    }
-    updateIcon();
+// Função para atualizar o ícone do botão
+function updateIcon() {
+  if (body.classList.contains('dark-mode')) {
+    darkModeToggle.textContent = '☀️'; // Sol para dark mode ativo
+  } else {
+    darkModeToggle.textContent = '🌙'; // Lua para modo claro
+  }
+}
 
-    darkModeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        if(body.classList.contains('dark-mode')) {
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            localStorage.setItem('darkMode', 'disabled');
-        }
-        updateIcon();
-    });
+// Verifica se o usuário já tem preferência salva
+if (localStorage.getItem('darkMode') === 'enabled') {
+  body.classList.add('dark-mode');
+}
+updateIcon();
+
+darkModeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark-mode');
+  if (body.classList.contains('dark-mode')) {
+    localStorage.setItem('darkMode', 'enabled');
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+  }
+  updateIcon();
+});
 
 // FIM DARKMODE
 
@@ -214,10 +214,10 @@ const translations = {
     serviceBodyAssessment: "Avaliação Corporal",
     serviceBodyAssessmentDesc: "Avaliação detalhada da composição corporal com bioimpedância e medidas antropométricas.",
     serviceBodyAssessmentPrice: "R$ 120 a avaliação",
-     packagesTitle: "Pacotes Promocionais",
-  btnHire: "Contratar",
-  contactLocationTitle: "Nossa Localização",
-  contactFormTitle: "Agende sua consulta",
+    packagesTitle: "Pacotes Promocionais",
+    btnHire: "Contratar",
+    contactLocationTitle: "Nossa Localização",
+    contactFormTitle: "Agende sua consulta",
     packageBronze: "Pacote Bronze",
     packageBronzePrice: "R$ 600",
     packageBronzeFeatures: [
@@ -227,7 +227,7 @@ const translations = {
       "Plano alimentar personalizado",
       "Suporte por e-mail"
     ],
-     nutritionistSpecialties: [
+    nutritionistSpecialties: [
       "Nutrição Clínica",
       "Nutrição Esportiva",
       "Nutrição Funcional",
@@ -327,10 +327,10 @@ const translations = {
     serviceBodyAssessmentDesc: "Detailed assessment of body composition with bioimpedance and anthropometric measurements.",
     serviceBodyAssessmentPrice: "$120 per assessment",
     packageBronze: "Bronze Package",
-      packagesTitle: "Promotional Packages",
-  btnHire: "Hire",
-  contactLocationTitle: "Our Location",
-  contactFormTitle: "Schedule your appointment",
+    packagesTitle: "Promotional Packages",
+    btnHire: "Hire",
+    contactLocationTitle: "Our Location",
+    contactFormTitle: "Schedule your appointment",
     packageBronzePrice: "$600",
     packageBronzeFeatures: [
       "3 in-person consultations",
@@ -361,7 +361,7 @@ const translations = {
       "Smart shopping list",
       "Exclusive nutrition e-book"
     ],
-        nutritionistSpecialties: [
+    nutritionistSpecialties: [
       "Clinical Nutrition",
       "Sports Nutrition",
       "Functional Nutrition",
@@ -440,10 +440,10 @@ const translations = {
     serviceBodyAssessmentPrice: "R$ 120 por evaluación",
     packageBronze: "Paquete Bronce",
     packageBronzePrice: "R$ 600",
-      packagesTitle: "Paquetes Promocionales",
-  btnHire: "Contratar",
-  contactLocationTitle: "Nuestra Ubicación",
-  contactFormTitle: "Agenda tu consulta",
+    packagesTitle: "Paquetes Promocionales",
+    btnHire: "Contratar",
+    contactLocationTitle: "Nuestra Ubicación",
+    contactFormTitle: "Agenda tu consulta",
     packageBronzeFeatures: [
       "3 consultas presenciales",
       "Evaluación corporal completa",
@@ -451,7 +451,7 @@ const translations = {
       "Plan alimentario personalizado",
       "Soporte por correo electrónico"
     ],
-     nutritionistSpecialties: [
+    nutritionistSpecialties: [
       "Nutrición Clínica",
       "Nutrición Deportiva",
       "Nutrición Funcional",
@@ -503,7 +503,7 @@ const translations = {
       nutritionSports: "Nutrición Deportiva",
       weightLoss: "Nutrición para Pérdida de Peso",
       nutritionPreventive: "Nutrición Preventiva",
-       nutritionalMonitoring: "Monitoreo Nutricional",
+      nutritionalMonitoring: "Monitoreo Nutricional",
       bodyAssessment: "Evaluación corporal",
       packageBronze: "Paquete Bronce",
       packageSilver: "Paquete Plata",
@@ -536,13 +536,13 @@ function translatePage(lang) {
     packagesTitle.textContent = translations[lang].packagesTitle;
   }
 
-   // Atualiza todos os botões "Agendar" que direcionam para o contato
+  // Atualiza todos os botões "Agendar" que direcionam para o contato
   const scheduleButtons = document.querySelectorAll('a.btn[href="#contact"]');
   scheduleButtons.forEach(btn => {
     btn.textContent = translations[lang].btnSchedule;
   });
 
-   // Botões "Contratar" nos pacotes
+  // Botões "Contratar" nos pacotes
   const hireButtons = document.querySelectorAll('#packages .package-card .btn');
   hireButtons.forEach(btn => {
     btn.textContent = translations[lang].btnHire;
@@ -554,7 +554,7 @@ function translatePage(lang) {
     contactLocationTitle.textContent = translations[lang].contactLocationTitle;
   }
 
-    // Título "Agende sua consulta" no formulário de contato
+  // Título "Agende sua consulta" no formulário de contato
   const contactFormTitle = document.querySelector('#contact .contact-form > h2');
   if (contactFormTitle) {
     contactFormTitle.textContent = translations[lang].contactFormTitle;
@@ -635,7 +635,7 @@ function translatePage(lang) {
   document.querySelector('#results h2').textContent = translations[lang].resultsTitle;
   document.querySelector('#results p.results-subtitle').textContent = translations[lang].resultsSubtitle;
 
-   // Nutricionista
+  // Nutricionista
   const nutritionistSection = document.querySelector('#nutritionist');
   if (nutritionistSection) {
     nutritionistSection.querySelector('h2').textContent = translations[lang].nutritionistName;
@@ -700,56 +700,56 @@ function translatePage(lang) {
     //   serviceSelect.options[7].text = translations[lang].formServiceOptions.packageGold;
     // }
     if (serviceSelect) {
-  // Limpa todas as opções anteriores
-  serviceSelect.innerHTML = '';
+      // Limpa todas as opções anteriores
+      serviceSelect.innerHTML = '';
 
-  // Adiciona a opção padrão
-  const defaultOption = document.createElement('option');
-  defaultOption.value = '';
-  defaultOption.textContent = translations[lang].formServiceOptions.default;
-  serviceSelect.appendChild(defaultOption);
+      // Adiciona a opção padrão
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = translations[lang].formServiceOptions.default;
+      serviceSelect.appendChild(defaultOption);
 
-  // Cria optgroup de Serviços
-  const servicesGroup = document.createElement('optgroup');
-  servicesGroup.label = lang === 'en' ? 'Services' : lang === 'es' ? 'Servicios' : 'Serviços';
+      // Cria optgroup de Serviços
+      const servicesGroup = document.createElement('optgroup');
+      servicesGroup.label = lang === 'en' ? 'Services' : lang === 'es' ? 'Servicios' : 'Serviços';
 
-  const serviceOptions = [
-    { value: 'nutrition_clinica', text: translations[lang].formServiceOptions.nutritionClinical },
-    { value: 'nutrition_sports', text: translations[lang].formServiceOptions.nutritionSports },
-    { value: 'weight_loss', text: translations[lang].formServiceOptions.weightLoss },
-    { value: 'nutrition_preventive', text: translations[lang].formServiceOptions.nutritionPreventive },
-    { value: 'nutritional_monitoring', text:translations[lang].formServiceOptions.nutritionalMonitoring },
-    { value: 'body_assessment', text:translations[lang].formServiceOptions.bodyAssessment }
-  ];
+      const serviceOptions = [
+        { value: 'nutrition_clinica', text: translations[lang].formServiceOptions.nutritionClinical },
+        { value: 'nutrition_sports', text: translations[lang].formServiceOptions.nutritionSports },
+        { value: 'weight_loss', text: translations[lang].formServiceOptions.weightLoss },
+        { value: 'nutrition_preventive', text: translations[lang].formServiceOptions.nutritionPreventive },
+        { value: 'nutritional_monitoring', text: translations[lang].formServiceOptions.nutritionalMonitoring },
+        { value: 'body_assessment', text: translations[lang].formServiceOptions.bodyAssessment }
+      ];
 
-  serviceOptions.forEach(opt => {
-    const option = document.createElement('option');
-    option.value = opt.value;
-    option.textContent = opt.text;
-    servicesGroup.appendChild(option);
-  });
+      serviceOptions.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        servicesGroup.appendChild(option);
+      });
 
-  serviceSelect.appendChild(servicesGroup);
+      serviceSelect.appendChild(servicesGroup);
 
-  // Cria optgroup de Pacotes
-  const packagesGroup = document.createElement('optgroup');
-  packagesGroup.label = lang === 'en' ? 'Packages' : lang === 'es' ? 'Paquetes' : 'Pacotes';
+      // Cria optgroup de Pacotes
+      const packagesGroup = document.createElement('optgroup');
+      packagesGroup.label = lang === 'en' ? 'Packages' : lang === 'es' ? 'Paquetes' : 'Pacotes';
 
-  const packageOptions = [
-    { value: 'pacote_bronze', text: translations[lang].formServiceOptions.packageBronze },
-    { value: 'pacote_prata', text: translations[lang].formServiceOptions.packageSilver },
-    { value: 'pacote_ouro', text: translations[lang].formServiceOptions.packageGold }
-  ];
+      const packageOptions = [
+        { value: 'pacote_bronze', text: translations[lang].formServiceOptions.packageBronze },
+        { value: 'pacote_prata', text: translations[lang].formServiceOptions.packageSilver },
+        { value: 'pacote_ouro', text: translations[lang].formServiceOptions.packageGold }
+      ];
 
-  packageOptions.forEach(opt => {
-    const option = document.createElement('option');
-    option.value = opt.value;
-    option.textContent = opt.text;
-    packagesGroup.appendChild(option);
-  });
+      packageOptions.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        packagesGroup.appendChild(option);
+      });
 
-  serviceSelect.appendChild(packagesGroup);
-}
+      serviceSelect.appendChild(packagesGroup);
+    }
 
   }
 
@@ -805,43 +805,746 @@ function translatePage(lang) {
 
 const languageBtn = document.getElementById("currentFlag");
 
-  const languageMenu = document.getElementById("languageMenu");
-  const currentFlag = document.getElementById("currentFlag");
+const languageMenu = document.getElementById("languageMenu");
+const currentFlag = document.getElementById("currentFlag");
 
-  // Abre/fecha menu de idioma
-  languageBtn.addEventListener("click", () => {
-    languageMenu.style.display = languageMenu.style.display === "block" ? "none" : "block";
+// Abre/fecha menu de idioma
+languageBtn.addEventListener("click", () => {
+  languageMenu.style.display = languageMenu.style.display === "block" ? "none" : "block";
+});
+
+// Evento de clique em uma bandeira
+document.querySelectorAll("#languageMenu li").forEach((item) => {
+  item.addEventListener("click", () => {
+    const selectedLang = item.getAttribute("data-lang");
+    const selectedFlag = item.querySelector("img").src;
+
+    currentFlag.src = selectedFlag;
+    translatePage(selectedLang);
+    localStorage.setItem('siteLanguage', selectedLang);
+    languageMenu.style.display = "none";
   });
+});
 
-  // Evento de clique em uma bandeira
-  document.querySelectorAll("#languageMenu li").forEach((item) => {
-    item.addEventListener("click", () => {
-      const selectedLang = item.getAttribute("data-lang");
-      const selectedFlag = item.querySelector("img").src;
+// Fecha menu se clicar fora
+window.addEventListener("click", (e) => {
+  if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
+    languageMenu.style.display = "none";
+  }
+});
 
-      currentFlag.src = selectedFlag;
-      translatePage(selectedLang);
-      localStorage.setItem('siteLanguage', selectedLang);
-      languageMenu.style.display = "none";
+// Aplica idioma salvo ao carregar
+window.addEventListener("load", () => {
+  const savedLang = localStorage.getItem('siteLanguage') || 'pt';
+  const flagMap = {
+    pt: "https://flagcdn.com/w40/br.png",
+    en: "https://flagcdn.com/w40/gb.png",
+    es: "https://flagcdn.com/w40/es.png"
+  };
+  currentFlag.src = flagMap[savedLang] || flagMap.pt;
+  translatePage(savedLang);
+});
+// // JAVA PARA MUDAR O IDIOMA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Variáveis globais para Firestore e Auth
+let db;
+let auth;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const firebaseConfig = {
+    apiKey: "AIzaSyDr_RqWTRxLlSrOI-w5agxiEYQptUsYJJY",
+    authDomain: "gysellenutri-81f13.firebaseapp.com",
+    projectId: "gysellenutri-81f13",
+    storageBucket: "gysellenutri-81f13.firebasestorage.app",
+    messagingSenderId: "330865100406",
+    appId: "1:330865100406:web:0400cb9ce80a872a1f4157"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+
+  // Inicializações
+  carregarPacientes();
+
+  // Event listeners para menu usuário
+  const userMenuToggle = document.getElementById('userMenuToggle');
+  const userOptions = document.getElementById('userOptions');
+  if (userMenuToggle && userOptions) {
+    userMenuToggle.addEventListener('click', () => {
+      if (userOptions.style.display === 'none' || userOptions.style.display === '') {
+        userOptions.style.display = 'block';
+      } else {
+        userOptions.style.display = 'none';
+      }
     });
-  });
+  }
 
-  // Fecha menu se clicar fora
-  window.addEventListener("click", (e) => {
-    if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
-      languageMenu.style.display = "none";
+  // Login/Logout handlers
+  const loginBtn = document.getElementById('loginBtn');
+  const loginModal = document.getElementById('loginModal');
+  const closeLoginModalBtn = document.querySelector('#loginModal .close-button');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+
+  loginBtn.addEventListener('click', () => loginModal.style.display = 'flex');
+  closeLoginModalBtn.addEventListener('click', closeLoginModal);
+
+  function closeLoginModal() {
+    loginModal.style.display = 'none';
+    loginForm.reset();
+    loginError.textContent = '';
+  }
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      loginError.textContent = '';
+      closeLoginModal();
+    } catch (error) {
+      loginError.textContent = `Erro ao fazer login: ${error.message}`;
+      console.error("Login error:", error);
     }
   });
 
-  // Aplica idioma salvo ao carregar
-  window.addEventListener("load", () => {
-    const savedLang = localStorage.getItem('siteLanguage') || 'pt';
-    const flagMap = {
-      pt: "https://flagcdn.com/w40/br.png",
-      en: "https://flagcdn.com/w40/gb.png",
-      es: "https://flagcdn.com/w40/es.png"
-    };
-    currentFlag.src = flagMap[savedLang] || flagMap.pt;
-    translatePage(savedLang);
+  const logoutAdminBtn = document.getElementById('logoutAdminBtn');
+  const logoutPatientBtn = document.getElementById('logoutPatientBtn');
+
+  logoutAdminBtn.addEventListener('click', async () => {
+    await auth.signOut();
   });
-// // JAVA PARA MUDAR O IDIOMA
+  logoutPatientBtn.addEventListener('click', async () => {
+    await auth.signOut();
+  });
+
+  // Auth state listener
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      console.log("Usuário logado:", user);
+      document.getElementById('loggedInUserName').innerText = user.displayName || user.email;
+      document.getElementById('userMenu').style.display = 'block';
+      document.getElementById('loginButtonContainer').style.display = 'none';
+
+      try {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          if (userData.tipo === 'paciente') {
+            const patientDoc = await db.collection('patients').doc(user.uid).get();
+            if (patientDoc.exists) {
+              const patientData = patientDoc.data();
+              document.getElementById('patientDashboard').style.display = 'block';
+              displayPatientInfo(patientData);
+              loadPatientProtocols(user.uid);
+            } else {
+              console.warn("Paciente não encontrado na coleção 'patients'.");
+            }
+          } else {
+            // Admin
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadPatientsList();
+          }
+        } else {
+          console.warn("Usuário não encontrado na coleção 'users'.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados do Firestore:", error);
+      }
+
+    } else {
+      console.log("Usuário não está logado.");
+      document.getElementById('userMenu').style.display = 'none';
+      document.getElementById('loginButtonContainer').style.display = 'block';
+      document.getElementById('adminDashboard').style.display = 'none';
+      document.getElementById('patientDashboard').style.display = 'none';
+    }
+  });
+
+  // Register patient form
+  const registerPatientForm = document.getElementById('registerPatientForm');
+  const registerPatientError = document.getElementById('registerPatientError');
+
+  registerPatientForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('patientEmail').value;
+    const password = document.getElementById('patientPassword').value;
+    const confirmPassword = document.getElementById('patientConfirmPassword').value;
+
+    if (password !== confirmPassword) {
+      registerPatientError.textContent = "As senhas não coincidem.";
+      registerPatientError.style.color = "red";
+      return;
+    }
+
+    // Cria app secundário para não interferir no auth principal
+    const secondaryApp = firebase.initializeApp(firebase.app().options, "Secondary");
+
+    try {
+      const secondaryAuth = secondaryApp.auth();
+      const userCredential = await secondaryAuth.createUserWithEmailAndPassword(email, password);
+      const uid = userCredential.user.uid;
+
+      await db.collection('users').doc(uid).set({
+        email: email,
+        nome: document.getElementById('patientName').value,
+        tipo: "paciente"
+      });
+
+      await db.collection('patients').doc(uid).set({
+        uid: uid,
+        name: document.getElementById('patientName').value,
+        dob: document.getElementById('patientDOB').value,
+        gender: document.getElementById('patientGender').value,
+        cpf: document.getElementById('patientCPF').value,
+        email: email,
+        phone: document.getElementById('patientPhone').value,
+        landline: document.getElementById('patientLandline').value,
+        address: document.getElementById('patientAddress').value,
+        weight: parseFloat(document.getElementById('patientWeight').value) || null,
+        height: parseFloat(document.getElementById('patientHeight').value) || null,
+        conditions: document.getElementById('patientConditions').value.split(',').map(s => s.trim()).filter(s => s),
+        goals: document.getElementById('patientGoals').value,
+        restrictions: document.getElementById('patientRestrictions').value.split(',').map(s => s.trim()).filter(s => s),
+        medications: document.getElementById('patientMedications').value,
+        termsAccepted: document.getElementById('patientTerms').checked,
+        lgpdAccepted: document.getElementById('patientLGPD').checked,
+        photoURL: document.getElementById('patientPhoto').value,
+        observations: document.getElementById('patientObservations').value,
+        emergencyContact: document.getElementById('patientEmergencyContact').value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      registerPatientError.textContent = "Paciente cadastrado com sucesso!";
+      registerPatientError.style.color = "green";
+      registerPatientForm.reset();
+      loadPatientsList();
+      loadPatientsForProtocolSelect();
+
+      await secondaryAuth.signOut();
+      await secondaryApp.delete();
+    } catch (error) {
+      registerPatientError.textContent = `Erro ao cadastrar paciente: ${error.message}`;
+      registerPatientError.style.color = "red";
+      console.error("Erro ao cadastrar paciente:", error);
+    }
+  });
+
+  // Search input listener para filtrar lista de pacientes
+  const searchPatientInput = document.getElementById('searchPatientInput');
+  if(searchPatientInput) {
+    searchPatientInput.addEventListener('input', loadPatientsList);
+  }
+
+  // Protocolo form submit (novo protocolo)
+  const protocolForm = document.getElementById('protocolForm');
+  if (protocolForm) {
+    protocolForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const protocolPatientSelect = document.getElementById('protocolPatientSelect');
+      const protocolError = document.getElementById('protocolError');
+
+      const patientUid = protocolPatientSelect.value;
+      const protocolTitle = document.getElementById('protocolTitle').value;
+      const protocolContent = document.getElementById('protocolContent').value;
+
+      if (!patientUid) {
+        protocolError.textContent = "Por favor, selecione um paciente.";
+        protocolError.style.color = "red";
+        return;
+      }
+
+      try {
+        await db.collection('protocols').add({
+          patientUid: patientUid,
+          title: protocolTitle,
+          content: protocolContent,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          nutritionistUid: auth.currentUser.uid
+        });
+        protocolError.textContent = "Protocolo salvo com sucesso!";
+        protocolError.style.color = "green";
+        protocolForm.reset();
+      } catch (error) {
+        protocolError.textContent = `Erro ao salvar protocolo: ${error.message}`;
+        protocolError.style.color = "red";
+        console.error("Error saving protocol:", error);
+      }
+    });
+  }
+
+}); // fim do DOMContentLoaded
+
+
+// FUNÇÕES GLOBAIS
+
+async function carregarPacientes() {
+  const protocolPatientSelect = document.getElementById('protocolPatientSelect');
+  if (!protocolPatientSelect) {
+    console.error("Elemento protocolPatientSelect não encontrado no DOM!");
+    return;
+  }
+
+  try {
+    const querySnapshot = await db.collection('users').get();
+
+    protocolPatientSelect.innerHTML = '<option value="">Selecione um paciente</option>';
+
+    let pacientesEncontrados = false;
+
+    querySnapshot.forEach((doc) => {
+      const userData = doc.data();
+      if (userData.tipo === "paciente") {
+        const option = document.createElement("option");
+        option.value = doc.id;  // id do documento
+        option.textContent = userData.nome || userData.name;
+        protocolPatientSelect.appendChild(option);
+        pacientesEncontrados = true;
+      }
+    });
+
+    if (!pacientesEncontrados) {
+      protocolPatientSelect.innerHTML = '<option value="">Nenhum paciente encontrado</option>';
+    }
+  } catch (error) {
+    console.error("Erro ao carregar pacientes:", error);
+    protocolPatientSelect.innerHTML = '<option value="">Erro ao carregar pacientes</option>';
+  }
+}
+
+async function loadPatientsList() {
+  if (!db) {
+    console.error("Firestore não inicializado");
+    return;
+  }
+
+  const searchPatientInput = document.getElementById('searchPatientInput');
+  const patientsListDiv = document.getElementById('patientsList');
+
+  if (!patientsListDiv) {
+    console.error("Elemento patientsList não encontrado no DOM.");
+    return;
+  }
+
+  try {
+    const usersSnapshot = await db.collection('users')
+      .where('tipo', '==', 'paciente')
+      .get();
+
+    const pacientes = [];
+
+    for (const userDoc of usersSnapshot.docs) {
+      const userData = userDoc.data();
+      const uid = userDoc.id;
+
+      const patientDoc = await db.collection('patients').doc(uid).get();
+      const patientData = patientDoc.exists ? patientDoc.data() : {};
+
+      pacientes.push({
+        id: uid,
+        nome: userData.nome,
+        email: userData.email,
+        name: patientData.name || userData.nome,
+        phone: patientData.phone || '',
+        goals: patientData.goals || ''
+      });
+    }
+
+    if (pacientes.length === 0) {
+      patientsListDiv.innerHTML = '<p>Nenhum paciente encontrado.</p>';
+      return;
+    }
+
+    displayFilteredPatients(pacientes);
+  } catch (error) {
+    console.error("Erro ao carregar pacientes:", error);
+    patientsListDiv.innerHTML = `<p style="color:red;">Erro ao carregar pacientes: ${error.message}</p>`;
+  }
+}
+
+function displayFilteredPatients(patients) {
+  const searchPatientInput = document.getElementById('searchPatientInput');
+  const patientsListDiv = document.getElementById('patientsList');
+
+  if (!searchPatientInput || !patientsListDiv) {
+    console.error("Elementos não encontrados no DOM.");
+    return;
+  }
+
+  const searchTerm = searchPatientInput.value.toLowerCase();
+  const filteredPatients = patients.filter(patient =>
+    (patient.name && patient.name.toLowerCase().includes(searchTerm)) ||
+    (patient.email && patient.email.toLowerCase().includes(searchTerm))
+  );
+
+  patientsListDiv.innerHTML = '';
+  if (filteredPatients.length === 0) {
+    patientsListDiv.innerHTML = '<p>Nenhum paciente encontrado com este critério.</p>';
+    return;
+  }
+
+  filteredPatients.forEach(patient => {
+    const patientCard = document.createElement('div');
+    patientCard.classList.add('patient-card');
+    patientCard.innerHTML = `
+      <h4>${patient.name || patient.nome || 'Sem nome'}</h4>
+      <p><strong>Email:</strong> ${patient.email || 'N/A'}</p>
+      <p><strong>Telefone:</strong> ${patient.phone || 'N/A'}</p>
+      <p><strong>Objetivos:</strong> ${patient.goals || 'N/A'}</p>
+      <button class="btn" onclick="editPatient('${patient.id}')">Editar</button>
+      <button class="btn" onclick="deletePatient('${patient.id}', '${patient.email}')">Excluir</button>
+    `;
+    patientsListDiv.appendChild(patientCard);
+  });
+}
+
+async function loadPatientsForProtocolSelect() {
+  const protocolPatientSelect = document.getElementById('protocolPatientSelect');
+  if (!protocolPatientSelect) return;
+
+  try {
+    const snapshot = await db.collection('users').where('tipo', '==', 'paciente').get();
+
+    protocolPatientSelect.innerHTML = '<option value="">Selecione um paciente</option>';
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const option = document.createElement('option');
+      option.value = doc.id;
+      option.textContent = data.nome || data.name || 'Paciente sem nome';
+      protocolPatientSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Erro ao carregar pacientes para select:", error);
+    protocolPatientSelect.innerHTML = '<option value="">Erro ao carregar pacientes</option>';
+  }
+}
+
+function displayPatientInfo(patientData) {
+  document.getElementById('patientDashboardName').textContent = patientData.name || 'N/A';
+  document.getElementById('patientDashboardEmail').textContent = patientData.email || 'N/A';
+  document.getElementById('patientDashboardDOB').textContent = patientData.dob || 'N/A';
+  document.getElementById('patientDashboardGender').textContent = patientData.gender || 'N/A';
+  document.getElementById('patientDashboardCPF').textContent = patientData.cpf || 'N/A';
+  document.getElementById('patientDashboardPhone').textContent = patientData.phone || 'N/A';
+  document.getElementById('patientDashboardAddress').textContent = patientData.address || 'N/A';
+  document.getElementById('patientDashboardWeight').textContent = patientData.weight !== null ? patientData.weight : 'N/A';
+  document.getElementById('patientDashboardHeight').textContent = patientData.height !== null ? patientData.height : 'N/A';
+  document.getElementById('patientDashboardConditions').textContent = patientData.conditions && patientData.conditions.length > 0 ? patientData.conditions.join(', ') : 'Nenhuma';
+  document.getElementById('patientDashboardGoals').textContent = patientData.goals || 'N/A';
+  document.getElementById('patientDashboardRestrictions').textContent = patientData.restrictions && patientData.restrictions.length > 0 ? patientData.restrictions.join(', ') : 'Nenhuma';
+  document.getElementById('patientDashboardMedications').textContent = patientData.medications || 'Nenhum';
+  document.getElementById('patientDashboardEmergencyContact').textContent = patientData.emergencyContact || 'N/A';
+  document.getElementById('patientDashboardObservations').textContent = patientData.observations || 'Nenhuma';
+}
+
+// Carrega protocolos do paciente para visualização no dashboard paciente
+async function loadPatientProtocols(patientUid) {
+  const patientProtocolsList = document.getElementById('patientProtocolsList');
+  if (!patientProtocolsList) return;
+
+  patientProtocolsList.innerHTML = '<p>Carregando protocolos...</p>';
+  try {
+    const snapshot = await db.collection('protocols').where('patientUid', '==', patientUid).orderBy('createdAt', 'desc').get();
+    if (snapshot.empty) {
+      patientProtocolsList.innerHTML = '<p>Nenhum protocolo de alimentação cadastrado ainda.</p>';
+      return;
+    }
+
+    patientProtocolsList.innerHTML = '';
+    snapshot.forEach(doc => {
+      const protocol = doc.data();
+      const protocolItem = document.createElement('div');
+      protocolItem.classList.add('protocol-item');
+      protocolItem.innerHTML = `
+        <h4>${protocol.title}</h4>
+        <p>Data: ${protocol.createdAt ? new Date(protocol.createdAt.toDate()).toLocaleDateString() : 'N/A'}</p>
+        <pre>${protocol.content}</pre>
+      `;
+      patientProtocolsList.appendChild(protocolItem);
+    });
+  } catch (error) {
+    patientProtocolsList.innerHTML = `<p style="color: red;">Erro ao carregar protocolos: ${error.message}</p>`;
+    console.error("Error loading patient protocols:", error);
+  }
+}
+
+// Admin Dashboard Tabs
+function openAdminTab(tabName) {
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabContents.forEach(tab => tab.classList.remove('active'));
+
+  const tabButtons = document.querySelectorAll('.tab-button');
+  tabButtons.forEach(btn => btn.classList.remove('active'));
+
+  document.getElementById(tabName).classList.add('active');
+  document.querySelector(`.tab-button[onclick="openAdminTab('${tabName}')"]`).classList.add('active');
+
+  if (tabName === 'listPatients') {
+    loadPatientsList();
+  } else if (tabName === 'registerProtocol') {
+    loadPatientsForProtocolSelect();
+    carregarPacientes();
+  }
+}
+
+// Função para editar paciente, agora incluindo protocolos
+async function editPatient(uid) {
+  // Mostrar modal edição (supondo que exista modal com id editPatientModal)
+  const modal = document.getElementById('editPatientModal');
+  if (!modal) {
+    alert("Modal de edição do paciente não encontrado!");
+    return;
+  }
+  modal.style.display = 'block';
+
+  // Busca dados do paciente
+  try {
+    const patientDoc = await db.collection('patients').doc(uid).get();
+    if (!patientDoc.exists) {
+      alert("Paciente não encontrado.");
+      return;
+    }
+    const patientData = patientDoc.data();
+
+    // Preenche formulário de edição
+    document.getElementById('editPatientUid').value = uid;
+    document.getElementById('editPatientName').value = patientData.name || '';
+    document.getElementById('editPatientDOB').value = patientData.dob || '';
+    document.getElementById('editPatientGender').value = patientData.gender || '';
+    document.getElementById('editPatientCPF').value = patientData.cpf || '';
+    document.getElementById('editPatientEmail').value = patientData.email || '';
+    document.getElementById('editPatientPhone').value = patientData.phone || '';
+    document.getElementById('editPatientLandline').value = patientData.landline || '';
+    document.getElementById('editPatientAddress').value = patientData.address || '';
+    document.getElementById('editPatientWeight').value = patientData.weight || '';
+    document.getElementById('editPatientHeight').value = patientData.height || '';
+    document.getElementById('editPatientConditions').value = (patientData.conditions || []).join(', ');
+    document.getElementById('editPatientGoals').value = patientData.goals || '';
+    document.getElementById('editPatientRestrictions').value = (patientData.restrictions || []).join(', ');
+    document.getElementById('editPatientMedications').value = patientData.medications || '';
+    document.getElementById('editPatientObservations').value = patientData.observations || '';
+    document.getElementById('editPatientEmergencyContact').value = patientData.emergencyContact || '';
+
+    // Carrega protocolos do paciente para edição
+    await loadProtocolsForPatient(uid);
+
+  } catch (error) {
+    alert('Erro ao carregar paciente: ' + error.message);
+    console.error(error);
+  }
+}
+
+// Salvar edição do paciente
+const editPatientForm = document.getElementById('editPatientForm');
+if (editPatientForm) {
+  editPatientForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const uid = document.getElementById('editPatientUid').value;
+
+    try {
+      await db.collection('patients').doc(uid).update({
+        name: document.getElementById('editPatientName').value.trim(),
+        dob: document.getElementById('editPatientDOB').value,
+        gender: document.getElementById('editPatientGender').value,
+        cpf: document.getElementById('editPatientCPF').value.trim(),
+        email: document.getElementById('editPatientEmail').value.trim(),
+        phone: document.getElementById('editPatientPhone').value.trim(),
+        landline: document.getElementById('editPatientLandline').value.trim(),
+        address: document.getElementById('editPatientAddress').value.trim(),
+        weight: parseFloat(document.getElementById('editPatientWeight').value) || null,
+        height: parseFloat(document.getElementById('editPatientHeight').value) || null,
+        conditions: document.getElementById('editPatientConditions').value.split(',').map(s => s.trim()).filter(s => s),
+        goals: document.getElementById('editPatientGoals').value.trim(),
+        restrictions: document.getElementById('editPatientRestrictions').value.split(',').map(s => s.trim()).filter(s => s),
+        medications: document.getElementById('editPatientMedications').value.trim(),
+        observations: document.getElementById('editPatientObservations').value.trim(),
+        emergencyContact: document.getElementById('editPatientEmergencyContact').value.trim(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      alert("Paciente atualizado com sucesso!");
+      document.getElementById('editPatientModal').style.display = 'none';
+      loadPatientsList();
+    } catch (error) {
+      alert("Erro ao atualizar paciente: " + error.message);
+      console.error(error);
+    }
+  });
+}
+
+// Fechar modal edição paciente ao clicar fora
+window.onclick = function(event) {
+  const modal = document.getElementById('editPatientModal');
+  if (event.target === modal) {
+    modal.style.display = 'none';
+    document.getElementById('editProtocolSection').style.display = 'none';
+  }
+};
+
+// Deletar paciente (apaga dados da coleção users e patients)
+async function deletePatient(uid, email) {
+  if (!confirm(`Tem certeza que deseja excluir o paciente ${email}? Essa ação não pode ser desfeita.`)) return;
+
+  try {
+    await db.collection('users').doc(uid).delete();
+    await db.collection('patients').doc(uid).delete();
+    alert('Paciente excluído com sucesso.');
+    loadPatientsList();
+  } catch (error) {
+    alert('Erro ao excluir paciente: ' + error.message);
+    console.error(error);
+  }
+}
+
+// --- PROTOCOLOS ---
+
+// Carrega protocolos do paciente no modal para edição
+async function loadProtocolsForPatient(uid) {
+  const container = document.getElementById('patientProtocolsContainer');
+  container.innerHTML = '<p>Carregando protocolos...</p>';
+
+  try {
+    const snapshot = await db.collection('protocols')
+      .where('patientUid', '==', uid)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    if (snapshot.empty) {
+      container.innerHTML = '<p>Não há protocolos para este paciente.</p>';
+      return;
+    }
+
+    container.innerHTML = ''; // limpa container
+
+    snapshot.forEach(doc => {
+      const protocol = doc.data();
+      const protocolDiv = document.createElement('div');
+      protocolDiv.style.border = '1px solid #ddd';
+      protocolDiv.style.padding = '10px';
+      protocolDiv.style.marginBottom = '10px';
+      protocolDiv.style.borderRadius = '5px';
+
+      protocolDiv.innerHTML = `
+        <strong>${protocol.title}</strong> <br/>
+        <small>Data: ${protocol.createdAt ? new Date(protocol.createdAt.toDate()).toLocaleDateString() : 'N/A'}</small><br/>
+        <pre style="white-space: pre-wrap; margin-top: 5px;">${protocol.content}</pre>
+        <button data-protocol-id="${doc.id}" class="editProtocolBtn" style="margin-top:5px;">Editar</button>
+      `;
+
+      container.appendChild(protocolDiv);
+    });
+
+    // Adiciona listener para os botões de editar protocolo
+    document.querySelectorAll('.editProtocolBtn').forEach(button => {
+      button.addEventListener('click', () => {
+        const protocolId = button.getAttribute('data-protocol-id');
+        openEditProtocolForm(protocolId);
+      });
+    });
+
+  } catch (error) {
+    container.innerHTML = `<p style="color:red;">Erro ao carregar protocolos: ${error.message}</p>`;
+    console.error(error);
+  }
+}
+
+// Abre formulário para editar protocolo
+async function openEditProtocolForm(protocolId) {
+  const editSection = document.getElementById('editProtocolSection');
+  const protocolIdInput = document.getElementById('editProtocolId');
+  const protocolTitleInput = document.getElementById('editProtocolTitle');
+  const protocolContentInput = document.getElementById('editProtocolContent');
+
+  try {
+    const doc = await db.collection('protocols').doc(protocolId).get();
+
+    if (!doc.exists) {
+      alert('Protocolo não encontrado!');
+      return;
+    }
+
+    const protocol = doc.data();
+
+    protocolIdInput.value = protocolId;
+    protocolTitleInput.value = protocol.title || '';
+    protocolContentInput.value = protocol.content || '';
+
+    editSection.style.display = 'block';
+
+  } catch (error) {
+    alert('Erro ao carregar protocolo: ' + error.message);
+    console.error(error);
+  }
+}
+
+// Salvar alterações do protocolo
+document.getElementById('editProtocolForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const protocolId = document.getElementById('editProtocolId').value;
+  const title = document.getElementById('editProtocolTitle').value.trim();
+  const content = document.getElementById('editProtocolContent').value.trim();
+
+  if (!protocolId) {
+    alert('ID do protocolo não informado.');
+    return;
+  }
+
+  try {
+    await db.collection('protocols').doc(protocolId).update({
+      title,
+      content,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert('Protocolo atualizado com sucesso!');
+
+    // Atualiza a lista de protocolos no modal
+    const uid = document.getElementById('editPatientUid').value;
+    await loadProtocolsForPatient(uid);
+
+    // Esconde o formulário de edição
+    document.getElementById('editProtocolSection').style.display = 'none';
+
+  } catch (error) {
+    alert('Erro ao salvar protocolo: ' + error.message);
+    console.error(error);
+  }
+});
+
+// Botão cancelar edição protocolo
+document.getElementById('cancelEditProtocol').addEventListener('click', () => {
+  document.getElementById('editProtocolSection').style.display = 'none';
+});
+
